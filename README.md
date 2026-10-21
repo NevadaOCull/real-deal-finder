@@ -23,8 +23,8 @@ Other stores get smarter as the app records prices each day.
 Everything is in **`config/settings.yml`**. On GitHub: open the file, click the pencil
 (Edit), change it, and click **Commit changes**. Or just ask Claude to change it.
 
-- **interests** — names with search words. A deal shows up when its title has every word of a search.
-- **shop_sections** — sale pages of Shopify stores (DriftHQ, FDF Raceshop) to watch.
+- **interests** — names with searches. A deal shows up when its title contains a search as a phrase (whole words; plurals count).
+- **shop_sections** — sale pages of Shopify stores (DriftHQ, FDF Raceshop) to watch. Add `only:` words to show just the items whose titles contain one of them.
 - **watchlist** — product links to track, with an optional `target_price`.
 - **real_deal_threshold_percent** — how big a discount counts as a real deal.
 
