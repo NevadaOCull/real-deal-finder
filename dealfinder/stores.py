@@ -17,6 +17,7 @@ SLUG_NAMES = {
     "amazon": "Amazon",
     "walmart": "Walmart",
     "home-depot": "Home Depot",
+    "the-home-depot": "Home Depot",
     "best-buy": "Best Buy",
     "lowes": "Lowe's",
 }

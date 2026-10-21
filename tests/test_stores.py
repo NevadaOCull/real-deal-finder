@@ -23,3 +23,7 @@ def test_page_id_is_stable_and_ignores_query_and_slash():
     a = page_id("https://driftamerican.com/brake-lines/?utm=1")
     assert a == page_id("https://www.driftamerican.com/brake-lines")
     assert a.startswith("page-") and len(a) == 17
+
+
+def test_slickdeals_home_depot_slug_matches_store_name():
+    assert store_from_slug("the-home-depot") == store_name("https://www.homedepot.com/p/1") == "Home Depot"

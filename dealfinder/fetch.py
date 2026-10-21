@@ -2,8 +2,8 @@ from urllib.parse import urlparse
 
 import requests
 
-USER_AGENT = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
-              "(KHTML, like Gecko) Chrome/130.0 Safari/537.36")
+# CamelCamelCamel blocks the longer "(KHTML, like Gecko) Chrome/130.0" form of this.
+USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/130 Safari/537.36"
 
 
 class SourceError(Exception):
