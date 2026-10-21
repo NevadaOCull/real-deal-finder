@@ -1,0 +1,36 @@
+# Real Deal Finder settings
+# Lines starting with # are notes and are ignored.
+# After you change this file, the next daily check uses the new settings.
+
+# How far below its normal price something must be to count as a "Real deal".
+real_deal_threshold_percent: 15
+
+# The web address of your deals page (filled in once the page is turned on).
+site_url: ""
+
+# What you're interested in. Each name has a list of search words.
+# A deal shows up when its title contains every word of one of the searches.
+# These are starter words - change them to match your car and your tools.
+interests:
+  Drift parts:
+    - coilovers
+    - bucket seat
+    - angle kit
+    - hydraulic handbrake
+    - mustang
+  Tools:
+    - milwaukee
+    - dewalt
+    - impact driver
+    - socket set
+
+# Store sale sections to watch (Shopify stores like DriftHQ and FDF Raceshop).
+shop_sections:
+  - https://drifthq.com/collections/garage-sale
+
+# Specific items to watch. Paste the product link.
+# target_price is optional: you get an email when the price drops to it or below.
+# Example:
+#   - url: https://www.amazon.com/dp/B00KCF7JL6
+#     target_price: 150
+watchlist: []
