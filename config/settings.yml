@@ -8,16 +8,27 @@ real_deal_threshold_percent: 15
 # The web address of your deals page (filled in once the page is turned on).
 site_url: "https://nevadaocull.github.io/real-deal-finder/"
 
-# What you're interested in. Each name has a list of search words.
-# A deal shows up when its title contains every word of one of the searches.
-# These are starter words - change them to match your car and your tools.
+# What you're interested in. Each name has a list of searches.
+# A deal shows up when its title contains one of the searches as a phrase
+# (whole words, in that order; plurals count, so "coilover" also finds "coilovers").
 interests:
   Drift parts:
-    - coilovers
+    # 1979-2004 Mustang
+    - sn95
+    - fox body
+    - new edge mustang
+    - mustang 4.6
+    - mustang gt
+    # drift parts
+    - coilover
     - bucket seat
-    - angle kit
+    - racing seat
     - hydraulic handbrake
-    - mustang
+    - steering angle kit
+    - torque arm
+    - panhard
+    - subframe connector
+    - racing harness
   Tools:
     - milwaukee
     - dewalt
@@ -25,8 +36,13 @@ interests:
     - socket set
 
 # Store sale sections to watch (Shopify stores like DriftHQ and FDF Raceshop).
+# "only" limits a section to items whose titles contain one of these words.
+# Leave "only" out to see every item in the section.
 shop_sections:
-  - https://drifthq.com/collections/garage-sale
+  - url: https://drifthq.com/collections/garage-sale
+    only: [mustang, ford, sn95, fox body, new edge, universal, bucket seat,
+           racing seat, hydraulic handbrake, torque arm, panhard,
+           subframe connector, harness]
 
 # Specific items to watch. Paste the product link.
 # target_price is optional: you get an email when the price drops to it or below.

@@ -35,10 +35,10 @@ def test_search_keeps_recent_matching_priced_posts():
     assert found[0].store_slug == "flasharkracing"
 
 
-def test_search_requires_every_word_in_title():
+def test_search_requires_the_phrase_in_title():
     fetch = fake_fetch({"slickdeals.net": fixture("slickdeals_frontpage.xml")})
-    assert [d.thread_id for d in search("citizen watch", fetch, OCT_21)] == ["20184453"]
-    assert search("citizen toaster", fetch, OCT_21) == []
+    assert [d.thread_id for d in search("citizen eco-drive", fetch, OCT_21)] == ["20184453"]
+    assert search("citizen watch", fetch, OCT_21) == []  # both words present, but not together
 
 
 def test_search_url_encodes_term():

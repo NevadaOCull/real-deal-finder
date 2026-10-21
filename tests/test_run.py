@@ -6,7 +6,7 @@ from dealfinder.fetch import SourceError
 from dealfinder.history import History, PricePoint
 from dealfinder.models import Observation, OutsideStats
 from dealfinder.rating import MEH, NOT_ENOUGH, REAL, UNAVAILABLE
-from dealfinder.settings import Settings, WatchItem
+from dealfinder.settings import Settings, ShopSection, WatchItem
 from dealfinder.stores import page_id
 from helpers import fake_fetch, fixture
 
@@ -53,10 +53,16 @@ def test_camel_failure_still_keeps_deal():
 
 
 def test_shop_sections_collected():
-    settings = Settings(shop_sections=["https://drifthq.com/collections/garage-sale"])
+    settings = Settings(shop_sections=[ShopSection("https://drifthq.com/collections/garage-sale")])
     deals, _, statuses = run_module.collect(settings, fake_fetch(pages()), NOW, no_pause)
     assert len(deals) == 5 and all(d.interest == "Shop sales" for d in deals)
     assert ("DriftHQ sale section", True) in [(s.name, s.ok) for s in statuses]
+
+
+def test_shop_section_only_words_filter_items():
+    settings = Settings(shop_sections=[ShopSection("https://drifthq.com/collections/garage-sale", ["turbosmart", "leo grande"])])
+    deals, _, _ = run_module.collect(settings, fake_fetch(pages()), NOW, no_pause)
+    assert sorted(d.title.split(" - ")[1] for d in deals) == ["Leo Grande Racing", "Turbosmart Gen4 CompGate40 14psi"]
 
 
 def test_one_source_crashing_does_not_stop_others(monkeypatch):
@@ -64,7 +70,7 @@ def test_one_source_crashing_does_not_stop_others(monkeypatch):
         raise RuntimeError("parser bug")
     monkeypatch.setattr(run_module.slickdeals, "search", broken)
     settings = Settings(interests={"Watches": ["eco-drive"]},
-                        shop_sections=["https://drifthq.com/collections/garage-sale"])
+                        shop_sections=[ShopSection("https://drifthq.com/collections/garage-sale")])
     deals, _, statuses = run_module.collect(settings, fake_fetch(pages()), NOW, no_pause)
     assert len(deals) == 5
     slick = statuses[0]
@@ -77,7 +83,7 @@ def test_everything_failing_still_builds_page_and_keeps_history(tmp_path):
     history.record(Observation(id=page_id(url), title="Drill", store="Home Depot", url=url,
                                price=99.0, source="page"), date(2026, 10, 20))
     settings = Settings(interests={"Drift parts": ["coilovers"]},
-                        shop_sections=["https://drifthq.com/collections/garage-sale"],
+                        shop_sections=[ShopSection("https://drifthq.com/collections/garage-sale")],
                         watchlist=[WatchItem(url, 90)])
     deals, watched, statuses = run_module.collect(settings, fake_fetch({}), NOW, no_pause)
     report = run_module.build_report(deals, watched, statuses, history, TODAY, settings, NOW)

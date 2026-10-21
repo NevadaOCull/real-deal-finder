@@ -30,7 +30,7 @@ watchlist:
     assert s.real_deal_threshold_percent == 20
     assert s.site_url == "https://example.github.io/real-deal-finder/"
     assert s.interests == {"Drift parts": ["coilovers", "bucket seat"]}
-    assert s.shop_sections == ["https://drifthq.com/collections/garage-sale"]
+    assert [(x.url, x.only) for x in s.shop_sections] == [("https://drifthq.com/collections/garage-sale", [])]
     assert s.watchlist[0].url == "https://www.amazon.com/dp/B00KCF7JL6"
     assert s.watchlist[0].target_price == 150
     assert s.watchlist[0].name == "Citizen watch"
@@ -89,7 +89,22 @@ def test_misspelled_setting_is_named_with_suggestion(tmp_path):
 
 def test_single_shop_section_without_dash_is_allowed(tmp_path):
     s = load_settings(write(tmp_path, "shop_sections: https://drifthq.com/collections/garage-sale\n"))
-    assert s.shop_sections == ["https://drifthq.com/collections/garage-sale"]
+    assert [x.url for x in s.shop_sections] == ["https://drifthq.com/collections/garage-sale"]
+
+
+def test_shop_section_with_only_words(tmp_path):
+    s = load_settings(write(tmp_path, """
+shop_sections:
+  - url: https://drifthq.com/collections/garage-sale
+    only: [coilover, universal]
+"""))
+    assert [(x.url, x.only) for x in s.shop_sections] == [
+        ("https://drifthq.com/collections/garage-sale", ["coilover", "universal"])]
+
+
+def test_shop_section_needs_url(tmp_path):
+    with pytest.raises(SettingsError, match="shop_sections item #1 needs a 'url'"):
+        load_settings(write(tmp_path, "shop_sections:\n  - only: [coilover]\n"))
 
 
 def test_single_watch_item_without_dash_is_allowed(tmp_path):

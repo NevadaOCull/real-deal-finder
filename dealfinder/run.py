@@ -10,6 +10,7 @@ from pathlib import Path
 from . import camel, emailer, shopify, slickdeals
 from .fetch import fetch as real_fetch
 from .history import History
+from .matching import matches
 from .models import Observation
 from .rating import FAKE, MEH, NO_DEAL, NOT_ENOUGH, REAL, rate
 from .settings import Settings, SettingsError, load_settings
@@ -57,13 +58,15 @@ def _slickdeals(settings, fetch, now, pause, deals):
 
 def _shop_sections(settings, fetch, deals):
     statuses = []
-    for url in settings.shop_sections:
-        name = f"{store_name(url)} sale section"
+    for section in settings.shop_sections:
+        name = f"{store_name(section.url)} sale section"
         try:
-            found = shopify.section_observations(url, fetch)
+            found = shopify.section_observations(section.url, fetch)
         except Exception as e:
             statuses.append(SourceStatus(name, False, str(e)))
             continue
+        if section.only:
+            found = [obs for obs in found if any(matches(word, obs.title) for word in section.only)]
         for obs in found:
             obs.interest = "Shop sales"
             deals.setdefault(obs.id, obs)
@@ -122,7 +125,7 @@ def build_report(deals, watched, statuses, history: History, today: date, settin
         "settings": {
             "threshold": threshold,
             "interests": settings.interests,
-            "shop_sections": settings.shop_sections,
+            "shop_sections": [section.url for section in settings.shop_sections],
             "watch_count": len(settings.watchlist),
         },
         "sources": [asdict(s) for s in statuses],

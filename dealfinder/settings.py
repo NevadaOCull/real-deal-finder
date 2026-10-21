@@ -21,11 +21,17 @@ class WatchItem:
 
 
 @dataclass
+class ShopSection:
+    url: str
+    only: list[str] = field(default_factory=list)  # empty = show every item
+
+
+@dataclass
 class Settings:
     real_deal_threshold_percent: float = 15
     site_url: str = ""
     interests: dict[str, list[str]] = field(default_factory=dict)
-    shop_sections: list[str] = field(default_factory=list)
+    shop_sections: list[ShopSection] = field(default_factory=list)
     watchlist: list[WatchItem] = field(default_factory=list)
 
 
@@ -98,6 +104,14 @@ def load_settings(path: Path) -> Settings:
             name=item.get("name"),
         ))
 
+    shop_sections = []
+    for number, section in enumerate(_list(raw.get("shop_sections"), "shop_sections"), start=1):
+        if isinstance(section, str):
+            section = {"url": section}
+        if not isinstance(section, dict) or not section.get("url"):
+            raise SettingsError(f"shop_sections item #{number} needs a 'url'")
+        shop_sections.append(ShopSection(url=str(section["url"]).strip(), only=_words(section.get("only"))))
+
     threshold = _number(raw.get("real_deal_threshold_percent", 15), "real_deal_threshold_percent")
     if not 1 <= threshold <= 90:
         raise SettingsError(f"real_deal_threshold_percent should be between 1 and 90, but it says {threshold:g}")
@@ -106,6 +120,6 @@ def load_settings(path: Path) -> Settings:
         real_deal_threshold_percent=threshold,
         site_url=str(raw.get("site_url") or ""),
         interests={str(name): _words(words) for name, words in interests.items()},
-        shop_sections=[str(url).strip() for url in _list(raw.get("shop_sections"), "shop_sections")],
+        shop_sections=shop_sections,
         watchlist=watchlist,
     )

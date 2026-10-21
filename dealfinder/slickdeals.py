@@ -6,6 +6,7 @@ from email.utils import parsedate_to_datetime
 from urllib.parse import quote_plus
 
 from .fetch import SourceError
+from .matching import matches
 from .models import Observation
 from .prices import parse_price
 from .stores import store_from_slug
@@ -62,15 +63,10 @@ def parse_feed(xml_text: str) -> list[SlickDeal]:
     return deals
 
 
-def _matches(term, title):
-    title = title.lower()
-    return all(word in title for word in term.lower().split())
-
-
 def search(term: str, fetch, now: datetime) -> list[SlickDeal]:
     deals = parse_feed(fetch(SEARCH_URL.format(q=quote_plus(term))))
     return [d for d in deals
-            if d.price is not None and _matches(term, d.title)
+            if d.price is not None and matches(term, d.title)
             and d.posted is not None and now - d.posted <= MAX_AGE]
 
 
