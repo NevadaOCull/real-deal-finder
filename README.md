@@ -15,6 +15,9 @@ updates your deals page, and emails you if something is worth buying.
 | **Not enough history yet** | Tracked fewer than 14 days — check back |
 | **Couldn't check today** | The store blocked the check or was down; no price is guessed |
 
+You're only emailed about **new** deals: ones not emailed before, ones that got cheaper since,
+or ones last emailed over 30 days ago. The page always shows every current deal.
+
 Amazon items use CamelCamelCamel's price history, so they're rated from day one.
 Other stores get smarter as the app records prices each day.
 

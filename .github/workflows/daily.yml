@@ -46,7 +46,7 @@ jobs:
         run: |
           git config user.name "deal-finder-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          if [ -d data/history ]; then git add data/history; fi
+          if [ -d data ]; then git add -A data; fi   # price history + which deals were already emailed
           git diff --cached --quiet || git commit -m "Price history $(date -u +%F)"
           git pull --rebase   # in case settings were edited while this ran
           git push

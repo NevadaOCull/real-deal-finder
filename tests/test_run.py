@@ -155,3 +155,39 @@ def test_email_failure_does_not_fail_the_run(tmp_path, monkeypatch, capsys):
     assert run_module.main(tmp_path, fake_fetch(pages()), no_pause, env=env) == 0
     assert "couldn't send the alert email" in capsys.readouterr().out
     assert (tmp_path / "data" / "history" / "amazon-B00KCF7JL6.json").exists()
+
+
+def test_main_only_emails_new_deals(tmp_path, monkeypatch, capsys):
+    sent = []
+    monkeypatch.setattr(run_module.emailer, "send", lambda msg, address, password: sent.append(msg["Subject"]))
+    write_settings(tmp_path, 10)
+    env = {"GMAIL_ADDRESS": "me@gmail.com", "GMAIL_APP_PASSWORD": "pw"}
+
+    def run_on(day):
+        when = datetime(2026, 10, day, 11, 0, tzinfo=timezone.utc)
+        monkeypatch.setattr(run_module, "datetime", type("D", (), {"now": staticmethod(lambda tz=None: when)}))
+        assert run_module.main(tmp_path, fake_fetch(pages()), no_pause, env=env) == 0
+
+    run_on(21)
+    run_on(22)  # same deal, same price: no second email
+    assert sent == ["1 deal alert today"]
+    assert "1 alerts (0 new)" in capsys.readouterr().out
+    assert json.loads((tmp_path / "data" / "alerted.json").read_text(encoding="utf-8"))["amazon-B00KCF7JL6"] == {
+        "price": 184.65, "date": "2026-10-21"}
+
+
+def test_failed_email_is_retried_next_day(tmp_path, monkeypatch):
+    attempts = []
+
+    def flaky_send(msg, address, password):
+        attempts.append(msg["Subject"])
+        if len(attempts) == 1:
+            raise OSError("network down")
+    monkeypatch.setattr(run_module.emailer, "send", flaky_send)
+    write_settings(tmp_path, 10)
+    env = {"GMAIL_ADDRESS": "me@gmail.com", "GMAIL_APP_PASSWORD": "pw"}
+    for day in (21, 22):
+        when = datetime(2026, 10, day, 11, 0, tzinfo=timezone.utc)
+        monkeypatch.setattr(run_module, "datetime", type("D", (), {"now": staticmethod(lambda tz=None: when)}))
+        run_module.main(tmp_path, fake_fetch(pages()), no_pause, env=env)
+    assert attempts == ["1 deal alert today", "1 deal alert today"]

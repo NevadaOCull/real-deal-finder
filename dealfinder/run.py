@@ -8,6 +8,7 @@ from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
 from . import camel, emailer, shopify, slickdeals
+from .alerts import load_sent, new_alerts, remember, save_sent
 from .fetch import fetch as real_fetch
 from .history import History
 from .matching import matches
@@ -161,21 +162,26 @@ def main(root=Path("."), fetch=real_fetch, pause=time.sleep, env=os.environ) -> 
     (site / "deals.json").write_text(json.dumps(report, indent=1), encoding="utf-8")
 
     alerts = pick_alerts(report)
+    sent_path = root / "data" / "alerted.json"
+    sent = load_sent(sent_path)
+    fresh = new_alerts(alerts, sent, now.date())
     real = sum(1 for d in report["deals"] if d["rating"]["label"] == REAL)
     print(f"{len(report['deals'])} deals checked, {real} real deals, "
-          f"{len(report['watchlist'])} watched items, {len(alerts)} alerts")
+          f"{len(report['watchlist'])} watched items, {len(alerts)} alerts ({len(fresh)} new)")
     for status in statuses:
         if not status.ok:
             print(f"  problem - {status.name}: {status.message}")
 
     address, password = env.get("GMAIL_ADDRESS"), env.get("GMAIL_APP_PASSWORD")
-    if alerts and address and password:
+    if fresh and address and password:
         try:
-            emailer.send(emailer.compose(alerts, settings.site_url, address), address, password)
-            print("alert email sent")
+            emailer.send(emailer.compose(fresh, settings.site_url, address), address, password)
         except Exception as e:
             print(f"couldn't send the alert email ({e}). Check the Gmail app password secret.")
-    elif alerts:
+        else:
+            save_sent(sent_path, remember(fresh, sent, now.date()))
+            print("alert email sent")
+    elif fresh:
         print("alerts found, but email isn't set up (GMAIL_ADDRESS / GMAIL_APP_PASSWORD)")
     return 0
 
