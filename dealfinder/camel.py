@@ -43,8 +43,9 @@ def parse_camel_page(html: str) -> CamelStats:
     text = _table_text(html)
     for label in ("Amazon", "3rd Party New"):
         match = re.search(_row_pattern(label), text)
-        if match:
-            lowest, _highest, current, average = (to_number(g) for g in match.groups())
+        values = [to_number(g) for g in match.groups()] if match else [None]
+        if None not in values:
+            lowest, _highest, current, average = values
             return CamelStats(title=parse_product_page(html).title, current=current,
                               lowest=lowest, average=average)
     raise SourceError("couldn't read the CamelCamelCamel price table")

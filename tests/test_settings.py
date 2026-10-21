@@ -80,3 +80,33 @@ def test_real_settings_file_loads():
     s = load_settings(ROOT / "config" / "settings.yml")
     assert s.real_deal_threshold_percent == 15
     assert "Drift parts" in s.interests
+
+
+def test_misspelled_setting_is_named_with_suggestion(tmp_path):
+    with pytest.raises(SettingsError, match="'watchlst'.*'watchlist'"):
+        load_settings(write(tmp_path, "watchlst: []\n"))
+
+
+def test_single_shop_section_without_dash_is_allowed(tmp_path):
+    s = load_settings(write(tmp_path, "shop_sections: https://drifthq.com/collections/garage-sale\n"))
+    assert s.shop_sections == ["https://drifthq.com/collections/garage-sale"]
+
+
+def test_single_watch_item_without_dash_is_allowed(tmp_path):
+    s = load_settings(write(tmp_path, "watchlist:\n  url: https://x.com/p\n  target_price: 20\n"))
+    assert [(w.url, w.target_price) for w in s.watchlist] == [("https://x.com/p", 20)]
+
+
+def test_target_price_with_dollar_sign(tmp_path):
+    s = load_settings(write(tmp_path, "watchlist:\n  - url: https://x.com/p\n    target_price: $1,250\n"))
+    assert s.watchlist[0].target_price == 1250
+
+
+def test_threshold_must_be_sensible(tmp_path):
+    with pytest.raises(SettingsError, match="between 1 and 90"):
+        load_settings(write(tmp_path, "real_deal_threshold_percent: 0\n"))
+
+
+def test_missing_settings_file(tmp_path):
+    with pytest.raises(SettingsError, match="can't find"):
+        load_settings(tmp_path / "nope.yml")

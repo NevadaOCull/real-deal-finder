@@ -40,3 +40,10 @@ def test_amazon_observation():
     assert (obs.id, obs.store, obs.url, obs.price) == (
         "amazon-B00KCF7JL6", "Amazon", "https://www.amazon.com/dp/B00KCF7JL6", 184.63)
     assert (obs.outside.normal, obs.outside.lowest) == (214.71, 51.99)
+
+
+def test_zero_price_in_table_is_source_error_not_crash():
+    html = ("<tr><td>Amazon</td><td>$10.00</td><td>(Jan 1, 2020)</td><td>$20.00</td><td>(Jan 2, 2020)</td>"
+            "<td>$12.00</td><td>(Oct 21, 2026)</td><td>$0.00</td></tr>")
+    with pytest.raises(SourceError, match="CamelCamelCamel"):
+        parse_camel_page(html)

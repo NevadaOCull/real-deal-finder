@@ -167,8 +167,11 @@ def main(root=Path("."), fetch=real_fetch, pause=time.sleep, env=os.environ) -> 
 
     address, password = env.get("GMAIL_ADDRESS"), env.get("GMAIL_APP_PASSWORD")
     if alerts and address and password:
-        emailer.send(emailer.compose(alerts, settings.site_url, address), address, password)
-        print("alert email sent")
+        try:
+            emailer.send(emailer.compose(alerts, settings.site_url, address), address, password)
+            print("alert email sent")
+        except Exception as e:
+            print(f"couldn't send the alert email ({e}). Check the Gmail app password secret.")
     elif alerts:
         print("alerts found, but email isn't set up (GMAIL_ADDRESS / GMAIL_APP_PASSWORD)")
     return 0

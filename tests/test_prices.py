@@ -20,3 +20,11 @@ def test_to_number():
     assert to_number(None) is None
     assert to_number("0.00") is None
     assert to_number(True) is None
+
+
+def test_parse_price_skips_discount_and_minimum_spend_amounts():
+    assert parse_price("$10 off $50+ Milwaukee tools") is None
+    assert parse_price("Save $40: DeWalt kit $199") == 199.0
+    assert parse_price("Extra $20 Off Select Coilovers $480") == 480.0
+    assert parse_price("$0 Free Milwaukee hat") is None
+    assert parse_price("Push & Flip Utility $9.40 + Free Shipping w/ Prime or on $35+") == 9.4

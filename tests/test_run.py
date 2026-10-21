@@ -136,3 +136,16 @@ def test_main_settings_mistake_returns_1(tmp_path, capsys):
     (tmp_path / "config" / "settings.yml").write_text("interests: [unclosed", encoding="utf-8")
     assert run_module.main(tmp_path, fake_fetch({}), no_pause, env={}) == 1
     assert "formatting mistake" in capsys.readouterr().out
+
+
+def test_email_failure_does_not_fail_the_run(tmp_path, monkeypatch, capsys):
+    monkeypatch.setattr(run_module, "datetime", type("D", (), {"now": staticmethod(lambda tz=None: NOW)}))
+
+    def broken_send(msg, address, password):
+        raise OSError("535 Username and Password not accepted")
+    monkeypatch.setattr(run_module.emailer, "send", broken_send)
+    write_settings(tmp_path, 10)
+    env = {"GMAIL_ADDRESS": "me@gmail.com", "GMAIL_APP_PASSWORD": "old"}
+    assert run_module.main(tmp_path, fake_fetch(pages()), no_pause, env=env) == 0
+    assert "couldn't send the alert email" in capsys.readouterr().out
+    assert (tmp_path / "data" / "history" / "amazon-B00KCF7JL6.json").exists()
