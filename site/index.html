@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Real Deal Finder</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Real Deal Finder</h1>
+    <p id="updated" class="muted">Loading…</p>
+    <nav>
+      <button type="button" data-tab="deals" class="active">Deals</button>
+      <button type="button" data-tab="watchlist">Watchlist</button>
+      <button type="button" data-tab="settings">Settings</button>
+    </nav>
+  </header>
+  <main>
+    <section id="deals">
+      <div class="filters">
+        <select id="f-store" aria-label="Store"><option value="">All stores</option></select>
+        <select id="f-interest" aria-label="Interest"><option value="">All interests</option></select>
+        <label><input type="checkbox" id="f-real"> Real deals only</label>
+      </div>
+      <div id="problems"></div>
+      <div id="deal-list" class="cards"></div>
+    </section>
+    <section id="watchlist" hidden>
+      <div id="watch-list" class="cards"></div>
+    </section>
+    <section id="settings" hidden>
+      <div id="settings-body"></div>
+    </section>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
