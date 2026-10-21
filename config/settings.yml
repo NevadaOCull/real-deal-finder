@@ -6,7 +6,7 @@
 real_deal_threshold_percent: 15
 
 # The web address of your deals page (filled in once the page is turned on).
-site_url: ""
+site_url: "https://nevadaocull.github.io/real-deal-finder/"
 
 # What you're interested in. Each name has a list of search words.
 # A deal shows up when its title contains every word of one of the searches.
