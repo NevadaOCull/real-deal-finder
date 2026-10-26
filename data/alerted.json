@@ -7,13 +7,25 @@
   "date": "2026-10-23",
   "price": 10.0
  },
+ "amazon-B00307D71O": {
+  "date": "2026-10-26",
+  "price": 32.98
+ },
  "amazon-B003R7LBSS": {
   "date": "2026-10-22",
   "price": 14.44
  },
+ "amazon-B005G111FQ": {
+  "date": "2026-10-26",
+  "price": 14.97
+ },
  "amazon-B00FMHPQGO": {
   "date": "2026-10-22",
   "price": 10.6
+ },
+ "amazon-B00G1X2HPG": {
+  "date": "2026-10-26",
+  "price": 132.99
  },
  "amazon-B00GMXFK3G": {
   "date": "2026-10-22",
@@ -35,9 +47,17 @@
   "date": "2026-10-24",
   "price": 17.98
  },
+ "amazon-B07K2KN7D7": {
+  "date": "2026-10-26",
+  "price": 99.0
+ },
  "amazon-B0871323N6": {
   "date": "2026-10-25",
   "price": 559.0
+ },
+ "amazon-B08D34HH6B": {
+  "date": "2026-10-26",
+  "price": 19.98
  },
  "amazon-B08K9DDWZY": {
   "date": "2026-10-25",
@@ -50,6 +70,10 @@
  "amazon-B0B9T68W3B": {
   "date": "2026-10-23",
   "price": 196.25
+ },
+ "amazon-B0CJCQTYQ5": {
+  "date": "2026-10-26",
+  "price": 169.99
  },
  "amazon-B0CPT97MB4": {
   "date": "2026-10-22",
