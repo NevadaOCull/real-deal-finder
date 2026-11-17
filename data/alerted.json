@@ -164,8 +164,8 @@
   "price": 17.98
  },
  "amazon-B07GLCK8HN": {
-  "date": "2026-11-07",
-  "price": 9.97
+  "date": "2026-11-17",
+  "price": 9.95
  },
  "amazon-B07HDMGC2K": {
   "date": "2026-10-28",
@@ -210,6 +210,10 @@
  "amazon-B08K9DDWZY": {
   "date": "2026-10-25",
   "price": 19.98
+ },
+ "amazon-B09V7KDV69": {
+  "date": "2026-11-17",
+  "price": 79.98
  },
  "amazon-B09Y718XFV": {
   "date": "2026-11-10",

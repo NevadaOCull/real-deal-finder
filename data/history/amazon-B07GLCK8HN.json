@@ -1,8 +1,8 @@
 {
  "id": "amazon-B07GLCK8HN",
- "title": "$9.97, FS, DEWALT 3.187 in. Folding Knife with Spring Assist",
- "store": "Home Depot",
- "url": "https://slickdeals.net/f/20269410-9-97-fs-dewalt-3-187-in-folding-knife-with-spring-assist",
+ "title": "DEWALT Spring Assist Opening Pocket Knife w/ 3.19\" Blade $9.95",
+ "store": "Amazon",
+ "url": "https://slickdeals.net/f/20326065-dewalt-spring-assist-opening-pocket-knife-w-3-19-blade-9-95",
  "points": [
   {
    "date": "2026-11-07",
@@ -15,6 +15,10 @@
   {
    "date": "2026-11-09",
    "price": 9.97
+  },
+  {
+   "date": "2026-11-17",
+   "price": 9.95
   }
  ]
 }
